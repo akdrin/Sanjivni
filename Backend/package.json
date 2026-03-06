@@ -1,0 +1,22 @@
+{
+  "name": "sanjivni-backend",
+  "version": "1.0.0",
+  "description": "Backend logic Sanjivni",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akdrin/Sanjivni.git"
+  },
+  "author": "akdr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akdrin/Sanjivni/issues"
+  },
+  "homepage": "https://github.com/akdrin/Sanjivni#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
