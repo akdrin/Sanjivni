@@ -1,129 +1,47 @@
 const mongoose= require('mongoose')
 
-/**
- * job description schema : String
- * resume text : String
- * self description : String
- * 
- * match score : number
- * 
- * Technical questions :[{
- * question: "",
- * intention: "",
- * answer:""
- * }]/array
- * 
- * behavioral questions :[{
- * question: "",
- * intention: "",
- * answer:""
- * }]/array
- * 
- * Skill gaps :[{
- * skill:"",
- * severity:{
- * type: String,
- * enum: ['low','medium','high']
- * }
- * }]/array
- * 
- * 
- * Preparation plan:[{
- *      day: Number,
- *      focus: String,
- *      task: [String]
- * 
- * }] /obj
- * 
- */
-
-const technicalQuestionSchema= new mongoose.Schema({
-    question:{
-        type: String,
-        required: [true,"Technical question is required"]
+const doctorPrescriptionSchema= new mongoose.Schema({
+    consultationId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "consultations",
+        required: true,
+        unique: true
     },
-    intention:{
+    diagnosis:{
         type: String,
-        required: [true,"Intention is required"]
+        required: true
     },
-    answer:{
+    medicines:[
+        {
+        name:{
+            type:String,
+            required:true
+        },
+        dosage:{
+            type:String,
+            required:true
+        },
+        frequency:{
+            type:String
+        },
+        duration:{
+            type:String,
+            required:true
+        }
+        }
+    ],
+    additionalTests: [String],
+    doctorNotes:{
         type: String,
-        required: [true,"Answer is required"]
+        required: true
+    },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required: true
     }
-},{
-    _id: false
-})
+},{timestamps: true})
 
-const behavioralQuestionSchema= new mongoose.Schema({
-    question:{
-        type: String,
-        required: [true,"Behavioural question is required"]
-    },
-    intention:{
-        type: String,
-        required: [true,"Intention is required"]
-    },
-    answer:{
-        type: String,
-        required: [true,"Answer is required"]
-    }
-},{
-    _id: false
-})
+const doctorPrescriptionModel= mongoose.model("doctorPrescriptions",doctorPrescriptionSchema)
 
-const skillGapSchema= new mongoose.Schema({
-    skill:{
-        type: String,
-        required: [true,"Skill is required"]
-    },
-    severity:{
-        type: String,
-        enum: ["low","medium","high"],
-        required: [true,"Severity is required"]
-    }
-},{
-    _id:false
-})
-
-const preparationPlanSchema= new mongoose.Schema({
-    day:{
-        type: Number,
-        required: [true, "Day is required"]
-    },
-    focus:{
-        type: String,
-        required: [true,"Focus is required"]
-    },
-    tasks: {
-        type: String,
-        required: [true, "Task is required"]
-    }
-})
-
-const interviewReportSchema= new mongoose.Schema({
-    jobDescription:{
-        type: String,
-        required: [true,"Job description is required"]
-    },
-    resume:{
-        type: String,
-    },
-    selfDescription:{
-        type: String,
-    },
-    matchScore:{
-        type: Number,
-        min:0,
-        max:100,
-    },
-    technicalQuestions: [technicalQuestionSchema],
-    behavioralQuestions: [behavioralQuestionSchema],
-    skillGaps: [skillGapSchema],
-    preparationPlan: [preparationPlanSchema]
-},{
-    timestamps:true
-})
-
-const doctorReportModel= mongoose.model("InterviewReport",interviewReportSchema);
-
-module.exports= doctorReportModel;
+module.exports= doctorPrescriptionModel
