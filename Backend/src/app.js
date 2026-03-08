@@ -13,9 +13,14 @@ app.use(cors({
 
 // We are requiring all the routes here 
 const authRouter= require("./routes/auth.routes")
+const adminRouter= require("./routes/admin.routes")
+
+
 
 // Using all the routes here 
 app.use("/api/auth",authRouter)
+app.use("/api/admin",adminRouter)
+
 
 app.get('/',(req,res)=>{
     res.send("Hello")

@@ -2,6 +2,7 @@ const userModel= require('../models/user.model')
 const tokenblacklistModel=require('../models/blacklist.model')
 const bcrypt= require('bcryptjs')
 const jwt= require('jsonwebtoken')
+
 /**
  * @name registerUserController
  * @description Register a new User,expects username,email and password
@@ -9,44 +10,50 @@ const jwt= require('jsonwebtoken')
  */
 
 async function registerUserController(req,res){
-    const {username ,email ,password}= req.body
+    const {name, role, uniqueID, password, email, phone, clinicName, address, state}= req.body
 
-    if(!username || !password || !email){
-        return req.status(400).json({
-            message: "Please provide username,email and password"
+    if(!name || !role || !uniqueID || !password || !email || !phone || !clinicName || ! address || !state){
+        return res.status(400).json({
+            message: "Please provide all details"
         })
     }
 
     const isUserAlreadyExist= await userModel.findOne({
-        $or: [{username},{email}]
+        $or: [{uniqueID},{email},{phone}]
     })
 
     if(isUserAlreadyExist){
-        return req.status(400).json({
-            message: "Account already exist with this email or Username"
+        return res.status(400).json({
+            message: "Account already exist with this uniqueID , email or Phone no"
         })
     }
     const hash= await bcrypt.hash(password,10)
 
     const user= await userModel.create({
-        username,
+        name,
+        role,
+        uniqueID,
         email,
-        password: hash
+        phone,
+        clinicName,
+        address,
+        state,
+        password: hash,
+        verified: false
     })
 
-    const token= jwt.sign(
-        {id: user._id ,username: user.username},
-        process.env.JWT_SECRET,
-        {expiresIn:"1d"}
-    )
-
-    res.cookie("token",token)
     res.status(201).json({
-        message: "User registered sucessfully",
+        message: "User registered sucessfully, Waiting for verification",
         user: {
             id: user._id,
-            username: user.username,
-            email: user.email
+            name: user.name,
+            role: user.role,
+            uniqueID: user.uniqueID,
+            email: user.email,
+            phone: user.phone,
+            clinicName: user.clinicName,
+            address: user.address,
+            state: user.state
         }
     })
 }
@@ -58,23 +65,28 @@ async function registerUserController(req,res){
  */
 
 async function loginUserController(req,res){
-    const {username, password} =req.body
-    const user=await userModel.findOne({username})
+    const {uniqueID, password} =req.body
+    const user=await userModel.findOne({uniqueID})
     if(!user){
-        return req.status(400).json({
-            message: "Invalid Username or Password"
+        return res.status(400).json({
+            message: "Invalid ID"
         })
     }
-    const isPasswordValid= bcrypt.compare(password , user.password)
 
+    const isPasswordValid= await bcrypt.compare(password , user.password)
     if(!isPasswordValid){
-        return req.status(400).json({
-            message: "Invalid Username or Password"
+        return res.status(400).json({
+            message: "Invalid ID or Password"
         })
     }
 
+    if(!user.verified){
+        return res.status(403).json({
+            message:"Account not verified yet"
+        })
+    }
     const token = jwt.sign(
-        {id: user._id,username:user.username},
+        {id: user._id,uniqueID: user.uniqueID, role:user.role},
         process.env.JWT_SECRET,
         {expiresIn: "1d"}
     )
@@ -83,8 +95,14 @@ async function loginUserController(req,res){
         message:"User LoggedIn sucessfully",
         user:{
             id: user._id,
-            username: user.username,
-            email: user.email
+            name: user.name,
+            role: user.role,
+            uniqueID: user.uniqueID,
+            email: user.email,
+            phone: user.phone,
+            clinicName: user.clinicName,
+            address: user.address,
+            state: user.state
         }
     })
 }
@@ -114,13 +132,19 @@ async function logoutUserController(req,res){
  * @access private
  */
 async function getMeController(req,res){
-    const user=await userModel.findById(req.user.id)
+    const user= await userModel.findById(req.user.id).select("-password")
     res.status(200).json({
         message:"User details fetched sucessfully",
         user:{
             id: user._id,
-            username: user.username,
-            email: user.email
+            name: user.name,
+            role: user.role,
+            uniqueID: user.uniqueID,
+            email: user.email,
+            phone: user.phone,
+            clinicName: user.clinicName,
+            address: user.address,
+            state: user.state
         }
     })
 }

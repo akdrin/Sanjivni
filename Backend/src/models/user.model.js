@@ -7,7 +7,7 @@ const userSchema=new mongoose.Schema({
     },
     role:{
         type: String,
-        enum: ["Sanjivni Sahayak", "Doctor"],
+        enum: ["Admin","Sanjivni Sahayak", "Doctor"],
         required: true
     },
     uniqueID:{
