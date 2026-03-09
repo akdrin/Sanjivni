@@ -34,7 +34,7 @@ const vitalReportSchema= new mongoose.Schema({
     sugarLevel:{
         type: Number
     },
-    chemistNotes:{
+    sahayakNotes:{
         type: String
     },
     createdBy:{

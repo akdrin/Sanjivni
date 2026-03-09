@@ -44,6 +44,10 @@ const userSchema=new mongoose.Schema({
     address:{
         type:String,
         required: true
+    },
+    specialization:{
+        type: String,
+        enum: ["GENERAL","E&T","ORTHO","NEURO","DERMA","GYNAE"]
     }
 },{timestamps: true})
 

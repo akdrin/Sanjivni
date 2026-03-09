@@ -21,7 +21,7 @@ const patientSchema= new mongoose.Schema({
         type: String,
         required: true
     },
-    createdByChemist:{
+    createdBySahayak:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"users",
         required: true

@@ -6,9 +6,18 @@ const consultationSchema= new mongoose.Schema({
         ref: "patients",
         required: true
     },
-    chemistId:{
+    sahayakId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
+        required: true
+    },
+    requiredSpecialization:{
+        type: String,
+        enum: ["GENERAL","E&T","ORTHO","NEURO","DERMA","GYNAE"],
+        required: true
+    },
+    chiefComplaint:{
+        type: String,
         required: true
     },
     doctorId:{
@@ -24,7 +33,7 @@ const consultationSchema= new mongoose.Schema({
         type: String,
         required: true
     },
-    notesForChemist:{
+    notesForSahayak:{
         type: String,
         required: true
     }
