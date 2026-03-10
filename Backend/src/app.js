@@ -16,7 +16,7 @@ const authRouter= require("./routes/auth.routes")
 const adminRouter= require("./routes/admin.routes")
 const patientRouter= require("./routes/patient.routes")
 const consultationRouter= require("./routes/consultation.routes")
-const vitalsRouter= require("./routes/vitals.routes")
+const vitalRouter= require("./routes/vitals.routes")
 const prescriptionRouter= require("./routes/prescription.routes")
 
 // Using all the routes here 
@@ -24,7 +24,7 @@ app.use("/api/auth",authRouter)
 app.use("/api/admin",adminRouter)
 app.use("/api/patient",patientRouter)
 app.use("/api/consultation",consultationRouter)
-app.use("/api/vitals",vitalsRouter)
+app.use("/api/vitals",vitalRouter)
 app.use("/api/prescription",prescriptionRouter)
 
 app.get('/',(req,res)=>{
